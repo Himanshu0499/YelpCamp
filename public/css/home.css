@@ -1,0 +1,15 @@
+body{
+    height: 100vh;
+    background-image: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+    url('/images/dino-reichmuth-5Rhl-kSRydQ-unsplash.jpg');
+    background-position: bottom;
+    background-size: cover;;
+}
+.nav-link{
+    margin-left: 1em;
+    color: white;
+}
+
+.btn{
+    border-radius: 25px;
+}

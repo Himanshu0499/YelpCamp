@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boilerplate</title>
+    <%- include('../partials/links') %> 
+</head>
+<body class="d-flex flex-column vh-100" style="background-color:rgb(246, 245, 245);">
+    <%- include('../partials/navbar') %>
+    <main> 
+        <%- include('../partials/successflash') %>       
+        <%- body %>
+    </main> 
+    <%- include('../partials/footer') %>
+
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/validationForm.js"></script>
+</body>
+</html>

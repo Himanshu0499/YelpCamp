@@ -1,0 +1,210 @@
+<% layout('layouts/boilerplate') %>
+
+<link rel="stylesheet" href="/css/star.css">
+<!-- css and javascript link to display map -->
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.3.1/mapbox-gl.css' rel='stylesheet' />
+
+
+<!-- Modal -->
+<div class="modal fade" id="uploadImageModal" tabindex="-1" aria-labelledby="uploadImageModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uploadImageModal">Upload an Image</h5>
+            </div>
+            <form action="/campground/<%= showCamp._id %>/upload" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <label for="formFileMultiple" class="form-label">Upload Image</label>
+                    <input class="form-control" type="file" name="image" id="formFileMultiple" multiple>        
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-outline-primary">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                        <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                    </svg>
+                    Upload
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </form> 
+        </div>
+   </div>
+</div>
+
+<div class="container">
+   <div class="row">
+      <!-- Side Content -->
+      <div class="col-lg-3">
+         <div class="card mt-3">
+            <!-- Title -->
+            <h1 class="card-title fs-2 text-center"><%= showCamp.title%></h1>
+         </div>
+         <div class="card mt-2">
+            <div class="card-body">
+               <!-- Map -->
+               <div id='map'></div>
+            </div>
+         </div>
+         <div class="card mt-2">
+            <div class="card-body">
+               <!-- Location -->
+               <p class="card-text text-secondary">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-geo-alt" viewBox="0 0 16 16">
+                     <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z"/>
+                     <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                   </svg>
+                  <%= showCamp.location %>
+               </p>
+            </div>
+         </div>
+         <div class="card mt-2">
+            <div class="card-body d-flex justify-content-between">
+               <p class="card-text text-secondary">By : <%= showCamp.owner.username %></p>
+               <small class="card-text text-secondary">On <%= showCamp.date %> </small>
+            </div>
+         </div>
+      </div>
+      <!-- Main Content -->
+      <div class="col-lg-9">
+         <div class="card mt-3">
+            <!-- Camp Image -->
+            <div class="card-body">
+               <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                  <div class="carousel-inner">
+                     <% showCamp.images.forEach((img, i) => { %>
+                        <div class="carousel-item <%= i === 0? 'active' : '' %>">
+                           <img src="<%= img.url %>" class="d-block w-100" alt="">
+                        </div>
+                     <% })%>      
+                  </div>
+                  <% if(showCamp.images.length > 1) {%> 
+                  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Previous</span>
+                  </button>
+                  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
+                  </button>
+                  <% } %> 
+               </div>
+               <div class="d-flex justify-content-between mt-3">
+                  <p class="card-title fs-3 d-inline"><%= showCamp.title%></p>
+                  <!-- Price -->
+                  <span class="fs-4 " id="campPrice">
+                     <%= showCamp.price %> 
+                  </span> 
+               </div>
+            </div>
+            <!-- Description -->
+            <div class="card-body">
+               <h5 class="fs-4">Description</h5>
+               <p> <%= showCamp.description %> </p>
+            </div>
+            <div class="card-body d-flex justify-content-end">
+               <% if(currentUser) {%>
+               <!-- Button trigger modal -->
+               <button type="button" class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#uploadImageModal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-upload" viewBox="0 0 16 16">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+                </svg>
+                Upload Image
+               </button>
+               <% } %> 
+               <% if(currentUser && showCamp.owner.equals(currentUser._id)){ %> 
+               <!-- Edit Button -->
+               <a href="/campground/<%= showCamp.id %>/edit " class="btn btn-outline-primary me-2">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                     <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                     <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                  </svg>
+                  Edit
+               </a>
+               <!-- Delete Button -->
+               <form class="d-inline" action="/campground/<%= showCamp.id %>?_method=DELETE" method="post">
+                  <button class="btn btn-outline-danger">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                      </svg>
+                     Delete
+                  </button>
+               </form>
+               <% } %> 
+            </div>
+         </div>
+         <% if(currentUser) {%>
+         <div class="card mt-2">
+            <div class="card-body"> 
+                  <h2> Leave a Review</h2>
+                  <form action="/campground/<%= showCamp.id %>/review" method="POST" class="needs-validation" novalidate>
+                     <div class="mt-3">
+                        <fieldset class="starability-basic">
+                           <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked aria-label="No rating." />
+                           <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                           <label for="first-rate1" title="Terrible">1 star</label>
+                           <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                           <label for="first-rate2" title="Not good">2 stars</label>
+                           <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                           <label for="first-rate3" title="Average">3 stars</label>
+                           <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                           <label for="first-rate4" title="Very good">4 stars</label>
+                           <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                           <label for="first-rate5" title="Amazing">5 stars</label>
+                         </fieldset>
+                     </div>
+                     <div class="mb-3">
+                        <label class="form-label" for="body">Add a Review</label>
+                        <textarea class="form-control" name="review[body]" id="body" cols="30" rows="2" required></textarea>
+                     </div>
+                     <div class="d-flex justify-content-end mb-2">
+                        <button class="btn btn-warning">Submit</button>
+                     </div>
+                  </form>
+            </div>
+         </div>
+         <% } %>
+         <!-- Showing Reviews -->
+         <% if(showCamp.reviews) { %> 
+         <div class="card m-2">
+            <% for(let review of showCamp.reviews){ %>
+               <div class="card" id="reviewCard">
+                  <div class="card-body">
+                     <h6 class="card-title d-inline"><%= review.author.username %></h6>
+                     <p class="starability-result" data-rating="<%= review.rating %>">
+                        Rated: <%= review.rating %> stars
+                     </p> 
+                     <p><%= review.body %></p>
+                        <% if(currentUser && review.author.equals(currentUser._id)) { %> 
+                        <form class="position-absolute top-0 end-0" action="/campground/<%= showCamp.id %>/review/<%= review.id %>?_method=DELETE" method="post">
+                           <button class=" btn text-danger">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                 <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                 <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                              </svg>
+                           </button>
+                        </form>
+                        <% } %>  
+                  </div>
+               </div>           
+            <% } %>
+         </div>
+         <% } %> 
+      </div>
+   </div>
+</div>
+
+
+
+<script>
+   const mapToken = '<%- process.env.MAPBOX_TOKEN %>';
+   const camp = <%- JSON.stringify(showCamp) %>
+</script> 
+
+<script src="/js/showPageMap.js"></script>
+
+
+

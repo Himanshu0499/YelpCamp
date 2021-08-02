@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YelpCamp</title>
+    <%- include('../partials/links') %>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body class="d-flex text-white bg-dark">
+    <div class="container-fluid d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <nav class="navbar navbar-expand-lg  sticky-top navbar-dark bg-transparent mb-auto">
+            <div class="container-fluid">
+               <a class="navbar-brand">YelpCamp</a>
+               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+               </button>
+               <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                  <div class="navbar-nav ms-auto"> 
+                     <% if (!currentUser) { %>
+                        <a class="nav-link text-white" href="/register">Register</a>
+                        <a class="nav-link text-white" href="/login">Login</a>
+                     <% } else {%> 
+                        <a href="/logout" class="nav-link">Logout</a>  
+                     <% } %>                                          
+                  </div> 
+               </div>
+            </div>
+        </nav>
+        <main class="mainContent text-center p-3">
+            <p class="fs-1" id="homeHead">Welcome to YelpCamp!</p>
+            <p class="lead fs-5">Explore our many Campgrounds and feel free to share some of your own</p>
+            <a class="btn btn-lg btn-outline-secondary text-white" id="homeCampBtn" href="/campground">View All Campgrounds</a>
+        </main>
+        <footer class="mt-auto">
+            <div class="d-flex justify-content-center">
+                <span class="text-secondary">&copy; YelpCamp</span>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>
+
+
+
+
+

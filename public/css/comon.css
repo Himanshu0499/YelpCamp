@@ -1,0 +1,44 @@
+
+#image{
+    width: 600px;
+    height: 400px;
+}
+
+#returnLink{
+    margin-left: 467px;
+}
+
+/* #campPrice{
+    margin-left: 160px;   
+} */
+
+#campPrice::before{
+    content: "\0024";
+}
+/* #campDate{
+    margin-left: 150px;
+} */
+
+#campCard, #cardImg{
+    border-radius: 20px;;
+}
+
+
+
+#map{
+    height: 20rem;
+}
+#reviewCard{
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    border-radius: 0px;
+}
+
+#editCard, #newCampCard,#loginCard,#registerCard{
+    border-radius: 20px;
+}
+
+#loginCard,#registerCard{
+    width: 400px;
+}
