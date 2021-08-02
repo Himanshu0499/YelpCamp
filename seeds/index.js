@@ -24,7 +24,7 @@ const randomArray = array => array[Math.floor(Math.random() * array.length)]
 
 const seeds = async() =>{
     await campgrounds.deleteMany({})   
-    for(let i = 0; i <= 45; i++){
+    for(let i = 0; i <= 60; i++){
         //generating ramdom number for cities
         const random1000 = Math.floor(Math.random() * 1000); 
         //creating random price
