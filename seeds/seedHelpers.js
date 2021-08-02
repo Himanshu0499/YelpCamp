@@ -45,18 +45,6 @@ module.exports.places = [
 
 module.exports.images = [
     {
-      url: 'https://res.cloudinary.com/dnzjrylqa/image/upload/v1627913065/YelpCamp/lwzplwppfy2lo0jrwcxv.jpg',
-      filename: 'YelpCamp/lwzplwppfy2lo0jrwcxv'
-    },
-    {
-      url: 'https://res.cloudinary.com/dnzjrylqa/image/upload/v1627913112/YelpCamp/x8ozf6h4arc0qgpxmyud.jpg',
-      filename: 'YelpCamp/x8ozf6h4arc0qgpxmyud'
-    },
-    {
-      url: 'https://res.cloudinary.com/dnzjrylqa/image/upload/v1627913112/YelpCamp/vjnxpfh1i3danwgknbap.jpg',
-      filename: 'YelpCamp/vjnxpfh1i3danwgknbap'
-    },
-    {
       url: 'https://res.cloudinary.com/dnzjrylqa/image/upload/v1627913154/YelpCamp/cezkxwx4c1iekg3ja7zp.jpg',
       filename: 'YelpCamp/cezkxwx4c1iekg3ja7zp'
     },
@@ -75,6 +63,5 @@ module.exports.images = [
     {
       url: 'https://res.cloudinary.com/dnzjrylqa/image/upload/v1627913256/YelpCamp/szd0662fwhlt7ptncwvf.jpg',
       filename: 'YelpCamp/szd0662fwhlt7ptncwvf'
-    }
-  
+    } 
 ]
